@@ -1,36 +1,17 @@
 import sqlite3
 
 import faiss
-import google.generativeai as genai
 import numpy as np
 import streamlit as st
 from datasets import load_dataset
+from google import genai
 from google.api_core import retry
 from sentence_transformers import SentenceTransformer
 
+from conect_bd import inicializar_bd
+
 # Configuración de la API de Gemini
-genai.configure(
-    api_key="AIzaSyATKWU248g389QPbpssNfKup0bYZnaN_8Y"
-)  # Reemplaza con tu clave API
-
-
-# 🔹 Conectar a SQLite (para guardar historial de conversaciones)
-def inicializar_bd():
-    conn = sqlite3.connect("database/historial_chat.db")
-    cursor = conn.cursor()
-    # Crear la tabla si no existe
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS historial (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fecha TEXT NOT NULL,
-            usuario TEXT NOT NULL,
-            chatbot TEXT NOT NULL
-        )
-    """
-    )
-    conn.commit()
-    conn.close()
+client = genai.Client(api_key="AIzaSyATKWU248g389QPbpssNfKup0bYZnaN_8Y")  # API
 
 
 def guardar_historial(usuario, chatbot):
@@ -105,12 +86,27 @@ def retrieve_documents(query, index, model, texts, top_k=5):
 )
 
 # Generar respuesta usando Gemini
-def generate_response(query, relevant_docs):
-    context = "\n".join(relevant_docs)
-    prompt = f"Basado en la siguiente información:\n{context}\n\nResponde a la pregunta: {query}"
-    model = genai.GenerativeModel("gemini-pro")
-    response = model.generate_content(prompt)
-    return response.text
+def generate_response(query, relevant_docs, client):
+    try:
+        # Verificar si hay documentos relevantes
+        if not relevant_docs:
+            return "No se encontró información relevante para responder a tu pregunta."
+
+        # Crear el contexto
+        context = "\n".join(relevant_docs)
+        prompt = f"Basado en la siguiente información:\n{context}\n\nResponde de manera clara y concisa a la pregunta: {query}"
+
+        # Generar la respuesta con Gemini
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[{"role": "user", "parts": [{"text": prompt}]}],
+        )
+
+        # Devolver la respuesta generada
+        return response.text if response.text else "No se pudo generar una respuesta."
+
+    except Exception as e:
+        return f"Error al generar la respuesta: {str(e)}"
 
 
 # Interfaz de usuario con Streamlit
@@ -138,7 +134,7 @@ def main():
                 relevant_docs = retrieve_documents(query, index, model, texts)
 
                 # Generar respuesta usando Gemini
-                response = generate_response(query, relevant_docs)
+                response = generate_response(query, relevant_docs, client)
 
                 # Mostrar resultados
                 st.subheader("🤖 **Gemini dice:**")
