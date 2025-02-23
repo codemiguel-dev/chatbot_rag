@@ -74,3 +74,7 @@ ia_configuration.py: Contiene las funciones para cargar el dataset de Wikipedia,
 model.py: Contiene las funciones para interactuar con la base de datos SQLite y guardar/recuperar el historial de conversaciones.
 
 database/: Carpeta que contiene la base de datos SQLite para almacenar el historial de conversaciones.
+
+
+## Interfaz del Chatbot
+![Interfaz del Chatbot](ia_interaction/img-chatbot.PNG)

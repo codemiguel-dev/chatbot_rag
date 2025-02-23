@@ -24,7 +24,7 @@ client = genai.Client(api_key="AIzaSyATKWU248g389QPbpssNfKup0bYZnaN_8Y")  # API
 
 # Interfaz de usuario con Streamlit
 def main():
-    st.title("🤖 Chatbot con Wikipedia y Geminis")
+    st.title("🤖 Chatbot con Wikipedia y Gemini")
     st.write(
         "Este sistema permite hacer preguntas y obtener respuestas basadas en artículos de Wikipedia."
     )
