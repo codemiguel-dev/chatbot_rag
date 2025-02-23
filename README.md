@@ -13,7 +13,7 @@ Clona el repositorio:
 
 bash
 Copy
-git clone https://github.com/tu-usuario/tu-repositorio.git
+git clone https://github.com/codemiguel-dev/chatbot_rag
 cd tu-repositorio
 Crea un entorno virtual (opcional pero recomendado):
 
