@@ -7,7 +7,6 @@ from ia_configuration import (
     create_faiss_index,
     generate_response,
     load_wikipedia_dataset,
-    preprocess_text,
     retrieve_documents,
 )
 from model import guardar_historial, obtener_historial

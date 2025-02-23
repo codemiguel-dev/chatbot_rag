@@ -5,7 +5,7 @@ def guardar_historial(usuario, chatbot):
     conn = sqlite3.connect("database/historial_chat.db")
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO historial (fecha, usuario, chatbot) VALUES (datetime('now'), ?, ?)",
+        "INSERT INTO historial (fecha, usuario, chatbot) VALUES (date('now'), ?, ?)",
         (usuario, chatbot),
     )
     conn.commit()

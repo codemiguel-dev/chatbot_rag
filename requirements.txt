@@ -1,0 +1,8 @@
+streamlit
+google-generativeai
+google-api-core
+datasets
+sentence-transformers
+faiss-cpu
+numpy
+sqlite3
