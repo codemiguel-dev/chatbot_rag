@@ -1,3 +1,5 @@
+import pickle
+
 import faiss
 import numpy as np
 import streamlit as st
@@ -9,8 +11,10 @@ from sentence_transformers import SentenceTransformer
 @st.cache_resource
 def load_wikipedia_dataset():
     dataset = load_dataset(
-        "wikimedia/wikipedia", "20231101.es", split="train[:1000]"
-    )  # Cargar solo 1000 documentos para prueba
+        "wikimedia/wikipedia",
+        "20231101.es",
+        split="train[:1000]",  # Cargar solo 1000 documentos para prueba
+    )
     return dataset
 
 
@@ -21,18 +25,35 @@ def preprocess_text(text):
     return text
 
 
+# Guardar y cargar embeddings para evitar recalcularlos
+def save_embeddings(embeddings, filename="embeddings.pkl"):
+    with open(filename, "wb") as f:
+        pickle.dump(embeddings, f)
+
+
+def load_embeddings(filename="embeddings.pkl"):
+    with open(filename, "rb") as f:
+        return pickle.load(f)
+
+
 # Generar embeddings y crear índice FAISS
 @st.cache_resource
-def create_faiss_index(_dataset):  # Cambia 'dataset' a '_dataset'
+def create_faiss_index(_dataset):
     model = SentenceTransformer(
         "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-    )  # Modelo multilingüe
-    texts = [preprocess_text(doc["text"]) for doc in _dataset]  # Usa '_dataset' aquí
-    embeddings = model.encode(texts, show_progress_bar=True)
+    )
+    texts = [preprocess_text(doc["text"]) for doc in _dataset]
+
+    # Revisar si ya tenemos los embeddings calculados
+    try:
+        embeddings = load_embeddings()  # Cargar los embeddings guardados
+    except FileNotFoundError:
+        embeddings = model.encode(texts, show_progress_bar=True)
+        save_embeddings(embeddings)  # Guardar embeddings después de generarlos
 
     # Crear índice FAISS
     dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)  # Índice basado en distancia L2
+    index = faiss.IndexFlatL2(dimension)
     index.add(np.array(embeddings).astype("float32"))
     return index, model, texts
 

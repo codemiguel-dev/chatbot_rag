@@ -3,6 +3,5 @@ google-generativeai
 google-api-core
 datasets
 sentence-transformers
-faiss-cpu
+faiss-cpu --pre
 numpy
-sqlite3

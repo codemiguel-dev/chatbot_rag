@@ -1,0 +1,8 @@
+# Ignorar archivos innecesarios para Docker
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.log
+.env
