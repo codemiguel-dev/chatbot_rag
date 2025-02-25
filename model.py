@@ -1,6 +1,7 @@
 import sqlite3
 
 
+# funciones para interacción con base de datos
 def guardar_historial(usuario, chatbot):
     conn = sqlite3.connect("database/historial_chat.db")
     cursor = conn.cursor()
