@@ -11,9 +11,6 @@ from ia_configuration import (
 )
 from model import guardar_historial, obtener_historial
 
-# API de Geminis
-client = genai.Client(api_key="AIzaSyATKWU248g389QPbpssNfKup0bYZnaN_8Y")  # API
-
 
 @retry.Retry(
     initial=1.0,  # Tiempo inicial de espera (1 segundo)
@@ -24,7 +21,7 @@ client = genai.Client(api_key="AIzaSyATKWU248g389QPbpssNfKup0bYZnaN_8Y")  # API
 
 # Interfaz de usuario con Streamlit
 def main():
-    st.title("🤖 Chatbot con Wikipedia y Gemini")
+    st.title("🤖 Chatbot con Wikipedia y Gemini 2.0")
     st.write(
         "Este sistema permite hacer preguntas y obtener respuestas basadas en artículos de Wikipedia."
     )
@@ -47,7 +44,7 @@ def main():
                 relevant_docs = retrieve_documents(query, index, model, texts)
 
                 # Generar respuesta usando Gemini
-                response = generate_response(query, relevant_docs, client)
+                response = generate_response(query, relevant_docs)
 
                 # Mostrar resultados
                 st.subheader("🤖 **Gemini dice:**")

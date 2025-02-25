@@ -1,10 +1,16 @@
 import pickle
 
 import faiss
+import google.generativeai as genai
 import numpy as np
 import streamlit as st
 from datasets import load_dataset
+from google import genai
+from langchain.schema import HumanMessage
 from sentence_transformers import SentenceTransformer
+
+# API de Gemini
+client = genai.Client(api_key="AIzaSyATKWU248g389QPbpssNfKup0bYZnaN_8Y")  # API key
 
 
 # Cargar el dataset de Wikipedia
@@ -69,7 +75,7 @@ def retrieve_documents(query, index, model, texts, top_k=5):
 
 
 # Generar respuesta usando Gemini
-def generate_response(query, relevant_docs, client):
+def generate_response(query, relevant_docs):
     try:
         # Verificar si hay documentos relevantes
         if not relevant_docs:

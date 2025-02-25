@@ -1,6 +1,0 @@
-runtime: python39  # Usa Python 3.9
-entrypoint: streamlit run app_web.py --server.port $PORT --server.address 0.0.0.0
-
-env_variables:
-  STREAMLIT_SERVER_HEADLESS: "true"  # Ejecuta Streamlit en modo headless
-  SWIG_INSTALL: 'true'
